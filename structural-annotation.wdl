@@ -85,7 +85,7 @@ workflow s_annotate {
       rrna_gff = rfam.rrna_gff,
       trna_gff = trnascan.gff,
       ncrna_tmrna_gff = rfam.ncrna_tmrna_gff,
-      crt_gff = crt.gff, 
+      crt_gff = crt.gff,
       genemark_gff = genemark.gff,
       prodigal_gff = prodigal.gff,
       container=container
@@ -125,8 +125,8 @@ workflow s_annotate {
     #File  gff = gff_merge.final_gff
     #File  gff = post_qc.out
     File?  gff = fasta_merge.final_modified_gff
-    File? crisprs = crt.crisprs 
-    File? proteins = fasta_merge.final_proteins 
+    File? crisprs = crt.crisprs
+    File? proteins = fasta_merge.final_proteins
   }
 }
 
@@ -188,8 +188,9 @@ task pre_qc {
     time: "1:00:00"
     memory: "86G"
     docker: container
+    cpu: 1
   }
-    
+
   output {
     File fasta = "${project_id}_contigs.fna"
   }
@@ -220,6 +221,7 @@ task gff_merge {
     time: "1:00:00"
     memory: "86G"
     docker: container
+    cpu: 1
   }
 
   output {
@@ -251,8 +253,9 @@ task fasta_merge {
     time: "2:00:00"
     memory: "40G"
     docker: "doejgi/img-annotation-pipeline:5.0.25"
+    cpu: 1
   }
-    
+
   output {
     File final_genes = "${project_id}_genes.fna"
     File final_proteins = "${project_id}_proteins.faa"
@@ -276,8 +279,8 @@ task gff_and_fasta_stats {
     time: "1:00:00"
     memory: "86G"
     docker: container
+    cpu: 1
   }
-    
 }
 
 task post_qc {
@@ -295,8 +298,9 @@ task post_qc {
     time: "1:00:00"
     memory: "86G"
     docker: container
+    cpu: 1
   }
-    
+
   output {
     File out = "${project_id}_structural_annotation.gff"
   }

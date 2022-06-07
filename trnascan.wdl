@@ -25,7 +25,6 @@ workflow trnascan {
 
 task trnascan_ba {
 
-  String bin="/opt/omics/bin/tRNAscan-SE"
   File input_fasta
   String project_id
   Int    threads
@@ -39,12 +38,10 @@ task trnascan_ba {
 
   runtime {
     time: "9:00:00"
-    docker: "scanon/im-trnascan:v0.0.1"
-    shared: "1"
+    #docker: "scanon/im-trnascan:v0.0.1"
+    docker: "scanon/im-trnascan@sha256:039516e2a1adf343de0ad4bf66fbca5d21f58f6f1ac0a2319fb4e3d4fa920957"
     memory: "115G"
-    poolname: "tuesday-one"
-    node: 5
-    nwpn: 8
+	cpu: threads
   }
 
   output {

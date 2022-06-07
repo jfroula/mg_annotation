@@ -1,6 +1,6 @@
 workflow prodigal {
 
-  String imgap_input_fasta
+  File imgap_input_fasta
   String imgap_project_id
   String imgap_project_type
   String container
@@ -11,7 +11,8 @@ workflow prodigal {
         input_fasta = imgap_input_fasta
     }
   }
-  if(imgap_project_type == "isolate" && fasta_len.wc >= 20000) {
+  Int word_count = select_first([fasta_len.wc, 0])
+  if(imgap_project_type == "isolate" && word_count >= 20000) {
     call iso_big {
       input:
         input_fasta = imgap_input_fasta,
@@ -19,7 +20,7 @@ workflow prodigal {
         container=container
     }
   }
-  if(imgap_project_type == "isolate" && fasta_len.wc < 20000) {
+  if(imgap_project_type == "isolate" && word_count < 20000) {
     call iso_small {
       input:
         input_fasta = imgap_input_fasta,
@@ -67,6 +68,7 @@ task fasta_len {
   }
 
   runtime {
+    cpu: 1
     time: "1:00:00"
     memory: "86G"
   }
@@ -80,7 +82,7 @@ task iso_big {
 
   String bin="/opt/omics/bin/prodigal"
   File   input_fasta
-  Int?   translation_table = 11
+  Int    translation_table = 11
   String project_id
   File   train = "${project_id}_prodigal.trn"
   String container
@@ -94,6 +96,7 @@ task iso_big {
   }
 
   runtime {
+    cpu: 1
     time: "1:00:00"
     memory: "86G"
     docker: container
@@ -120,6 +123,7 @@ task iso_small {
   }
 
   runtime {
+    cpu: 1
     time: "1:00:00"
     memory: "86G"
     docker: container
@@ -146,6 +150,7 @@ task metag {
   }
 
   runtime {
+    cpu: 1
     time: "1:00:00"
     memory: "86G"
     docker: container
@@ -159,7 +164,7 @@ task metag {
 }
 
 task clean_and_unify {
-  
+
   File?  iso_big_proteins_fasta
   File?  iso_small_proteins_fasta
   File?  meta_proteins_fasta
@@ -191,6 +196,7 @@ task clean_and_unify {
   }
 
   runtime {
+    cpu: 1
     time: "1:00:00"
     memory: "86G"
     docker: container

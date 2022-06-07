@@ -10,6 +10,7 @@ workflow annotation {
   #String  container="bfoster1/img-omics:0.1.9"
   String  container="bfoster1/img-omics@sha256:70087b2b3cc58236973f0dc5d8dde81af9afd98bc431f2bdb803ddc000a0c602"
 
+
   # structural annotation
   Boolean sa_execute=true
 
@@ -26,7 +27,6 @@ workflow annotation {
       call sa.s_annotate {
         input:
           cmzscore = split.cmzscore,
-          imgap_input_fasta = imgap_input_fasta,
           imgap_input_fasta = pathname,
           imgap_project_id = imgap_project_id,
           additional_threads = additional_threads,
@@ -145,7 +145,6 @@ task split{
      String cmzscore = read_string(cmzfile)
    }
    runtime {
-	 poolname: "split_short"
      memory: "50G"
 	 time: "00:20:00"
      cpu:  16
@@ -231,7 +230,7 @@ task merge_outputs {
   }
   runtime {
     memory: "2G"
-	time: "00:20:00"
+	  time: "00:20:00"
     cpu:  4
     maxRetries: 1
     docker: container
@@ -253,7 +252,7 @@ task final_stats {
 
   command {
     set -euo pipefail
-    ln ${input_fasta} ${fna}
+    ln -s ${input_fasta} ${fna}
     ${bin} ${fna} ${structural_gff}
   }
 
@@ -263,7 +262,7 @@ task final_stats {
   }
 
   runtime {
-	poolname: "annot_final_stats"
+    cpu: 1
     time: "0:10:00"
     memory: "86G"
     docker: container

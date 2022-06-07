@@ -1,6 +1,6 @@
 workflow genemark {
-  
-  String imgap_input_fasta
+
+  File   imgap_input_fasta
   String imgap_project_id
   String imgap_project_type
   String container
@@ -41,7 +41,7 @@ workflow genemark {
 }
 
 task gm_isolate {
-  
+
   String bin="/opt/omics/bin/gms2.pl"
   File   input_fasta
   String project_id
@@ -56,6 +56,7 @@ task gm_isolate {
   }
 
   runtime {
+    cpu: 1
     time: "1:00:00"
     memory: "86G"
     docker: container
@@ -69,7 +70,7 @@ task gm_isolate {
 }
 
 task gm_meta {
-  
+
   String bin="/opt/omics/bin/gmhmmp2"
 
   String model="/opt/omics/programs/GeneMark/GeneMarkS-2/v1.07/mgm_11.mod"
@@ -86,6 +87,7 @@ task gm_meta {
   }
 
   runtime {
+    cpu: 1
     time: "1:00:00"
     memory: "86G"
     docker: container
@@ -108,7 +110,7 @@ task clean_and_unify {
   String unify_bin="/opt/omics/bin/structural_annotation/unify_gene_ids.py"
   String project_id
   String container
-  
+
   command {
     set -uo pipefail
     sed -i 's/\*/X/g' ${iso_proteins_fasta} ${meta_proteins_fasta}
@@ -124,6 +126,7 @@ task clean_and_unify {
   }
 
   runtime {
+    cpu: 1
     time: "1:00:00"
     memory: "86G"
     docker: container

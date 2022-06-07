@@ -5,9 +5,9 @@ workflow rfam {
   String imgap_project_type
   Int    additional_threads
   String database_location="/refdata/database"
-  String cm="${database_location}"+"Rfam/13.0/Rfam.cm"
-  String claninfo_tsv="${database_location}"+"Rfam/13.0/Rfam.claninfo"
-  String feature_lookup_tsv="${database_location}"+"Rfam/13.0/Rfam_feature_lookup.tsv"
+  String cm="${database_location}"+"/Rfam/13.0/Rfam.cm"
+  String claninfo_tsv="${database_location}"+"/Rfam/13.0/Rfam.claninfo"
+  String feature_lookup_tsv="${database_location}"+"/Rfam/13.0/Rfam_feature_lookup.tsv"
   String container
 
 
@@ -44,7 +44,7 @@ task run {
   String container
 
   command <<<
-    set -euo pipefail
+    #set -euo pipefail
     ${bin} --notextw --cut_tc --cpu ${threads} -Z ${cmzscore} --tblout ${project_id}_rfam.tbl ${cm} ${input_fasta}
     tool_and_version=$(${bin} -h | grep INFERNAL | perl -pne 's/^.*INFERNAL/INFERNAL/' )
     grep -v '^#' ${project_id}_rfam.tbl | \
